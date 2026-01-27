@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>CMPSC 390 Demo</title>
+</head>
+
+<body>
+  <h1>CMPSC 390 – Server Demo</h1>
+
+  <p>This page talks to the server, not the database.</p>
+
+  <button id="loadUser">Load User</button>
+
+  <p id="result"></p>
+
+  <form id="loginform">
+
+    <label for="username">Username:</label><br>
+    <input type="text" id="username" name="username"> <br>
+    <label for="password">Password:</label><br>
+    <input type="password" id="password" name="password"> <br><br>
+    <button type="submit">Login</button>
+
+  </form>
+
+  <p id="logingResult"></p>
+
+
+
+
+  <script>
+    const button = document.getElementById('loadUser');
+    const result = document.getElementById('result');
+
+    button.addEventListener('click', async () => {
+      try {
+        const res = await fetch('/hello-user');
+        const text = await res.text();
+        result.textContent = text;
+      } catch (err) {
+        result.textContent = 'Error contacting server';
+      }
+    });
+
+
+    const loginform = document.getElementById('loginform');
+    const logingResult = document.getElementById('logingResult');
+
+    loginform.addEventListener('submit', async (e) => {
+
+      e.preventDefault();
+      const formData = new FormData(loginform);
+      const res = await fetch('/login', {
+        method: 'POST',
+        body: new URLSearchParams(formData)
+
+      });
+
+      const text = await res.text();
+      logingResult.textContent = text;
+
+    });
+
+  </script>
+
+
+</body>
+
+</html>
