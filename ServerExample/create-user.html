@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create User</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea {
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #ff00f2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #aa00b3;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Create User</h1>
+    <form id="cuForm" action="/create-user" method="POST">
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="birthday">Birthday (YYYY-MM-DD):</label>
+        <input type="text" id="birthday" name="birthday" required>
+
+        <button type="submit">Create User</button>
+    </form>
+    <p id="message"></p>
+
+    <script>
+        const form = document.getElementById('cuForm');
+        const message = document.getElementById('message');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                username: form.username.value,
+                password: form.password.value,
+                firstname: form.firstname.value,
+                lastname: form.lastname.value,
+                birthday: form.birthday.value
+            };
+            try {
+                const res = await fetch('/create-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const text = await res.text();
+                message.textContent = text;
+
+                if (res.ok) form.reset();
+            } catch (err) {
+                console.error(err);
+                message.textContent = 'Error creating user.';
+            }
+        });
+    </script>
+</body>
+
+</html>

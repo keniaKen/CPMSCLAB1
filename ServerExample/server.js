@@ -58,8 +58,24 @@ app.post('/login', (req, res) => {
     }
   });
 });
+//this is for the server side the port to creat the user 
+app.post('/create-user', (req, res) => {
+  const { username, password, firstname, lastname, birthday } = req.body;
+  const hashedPassword = crypto
+    .createHash('sha256')
+    .update(password)
+    .digest('hex');
 
+  const sql = 'INSERT INTO user (username, password, firstname, lastname, birthday) VALUES (?, ?, ?, ?, ?)';
 
+  db.query(sql, [username, hashedPassword, firstname, lastname, birthday], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Database error');
+    }
+    res.send(`User ${firstname} created successfully!`);
+  });
+});
 
 
 app.use((req, res) => {
