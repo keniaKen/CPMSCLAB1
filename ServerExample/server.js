@@ -59,7 +59,9 @@ app.post('/login', (req, res) => {
   });
 });
 //this is for the server side the port to creat the user 
+app.use(express.json());
 app.post('/create-user', (req, res) => {
+  console.log(req.body);
   const { username, password, firstname, lastname, birthday } = req.body;
   const hashedPassword = crypto
     .createHash('sha256')
@@ -70,6 +72,7 @@ app.post('/create-user', (req, res) => {
 
   db.query(sql, [username, hashedPassword, firstname, lastname, birthday], (err, result) => {
     if (err) {
+      console.error('MYSQL ERROR:', err);
       console.error(err);
       return res.status(500).send('Database error');
     }
